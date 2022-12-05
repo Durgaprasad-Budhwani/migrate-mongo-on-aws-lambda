@@ -1,0 +1,44 @@
+name: Main UAT API and Apps
+
+on:
+  push:
+    branches:
+      - dev
+
+env:
+  ENV: dev
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  ROOT_DOMAIN: ${{ secrets.ROOT_DOMAIN }}
+  CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+
+jobs:
+  migrate:
+    name: Run MongoDB Migrations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Deploy API Gateway
+        run: |
+          yarn install
+          lerna bootstrap
+          cd infra/apiGateway
+          npx aws-cdk synth
+          npx aws-cdk deploy --require-approval never
+
+      - name: Run Migration
+        uses: gagoar/invoke-aws-lambda@master
+        with:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          FunctionName: ${{ env.ENV }}-migration-handler-sls
+
