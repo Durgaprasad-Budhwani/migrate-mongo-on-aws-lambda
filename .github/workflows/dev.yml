@@ -27,11 +27,11 @@ jobs:
         with:
           node-version: 16
 
-      - name: Deploy API Gateway
+      - name: Deploy AWS Lambda with migration scripts
         run: |
           yarn install
-          lerna bootstrap
-          cd infra/apiGateway
+          cd deploy
+          yarn install
           npx aws-cdk synth
           npx aws-cdk deploy --require-approval never
 
