@@ -1,0 +1,7 @@
+{
+  "name": "migration-mongo-on-aws-lambda",
+  "version": "1.0.0",
+  "dependencies": {
+    "migrate-mongo": "^9.0.0"
+  }
+}

@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "${MONGO_DB_PORT}:27017"
+
