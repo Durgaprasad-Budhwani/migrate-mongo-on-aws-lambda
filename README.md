@@ -15,7 +15,7 @@ In this solution, we will use GitHub Action to invoke lambda, and lambda will ru
 
 The following diagram illustrates the solution architecture.
 
-![](https://cdn-images-1.medium.com/max/3402/1*x-jI-fc9SrSMP9F33YeIug.png)
+![](https://cdn-images-1.medium.com/max/2942/1*lziUzGLPOUlQTeZmE2MwGQ.png)
 
 ## Prerequisites
 
@@ -47,7 +47,7 @@ This will create migrate-mongo-config.js file.
 
 <iframe src="https://medium.com/media/5c844006286cccf93410f34b82332e80" frameborder=0></iframe>
 
-As per the project requirements, we need to change the database name **databaseName **and **url**
+As per the project requirements, we need to change the database name databaseName ****and url
 
 We can take this information from environment variables like below code snippet
 
@@ -261,13 +261,57 @@ For Deploying to any environment, we need to run the following commands:
     cdk synth
     cdk deploy
 
-* After deployment, we can test it locally by login to AWS Console and Navigate to the newly created lambda `**<environment_name>-migration-handler-sls` **and clicking on Test button as shown below
+* After deployment, we can test it locally by login to AWS Console and Navigate to the newly created lambda `**<environment_name>-migration-handler-sls` **and clicking on the Test button as shown below
 
 ![](https://cdn-images-1.medium.com/max/3426/1*QzMhX_m6l6YPRgnD4O77yA.png)
 
 This will run the migration as shown below:
 
 ![](https://cdn-images-1.medium.com/max/3272/1*Bczi7JbR4V1o55MFVJAdwQ.png)
+
+## GitHub Actions:
+
+// TODO Github Action Background
+
+For GitHub Actions, please log in to [Github](https://github.com/) account.
+
+* Go to repositories settings => Secrets => Actions.
+
+![](https://cdn-images-1.medium.com/max/3510/1*IxSI_t4XjQpReK6ZOnQb9w.png)
+
+* Add New repository secret.
+
+![](https://cdn-images-1.medium.com/max/2000/1*XnKL9cWHn68i_mKcvjimwA.png)
+
+* Add DB_NAME and CONNECTION_STRING
+
+![](https://cdn-images-1.medium.com/max/2000/1*Zf4aiyKrlFgzmpyw_laMIw.png)
+
+* Add AWS Secrets like AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+
+![](https://cdn-images-1.medium.com/max/2000/1*rWQXXwUyetMTKzW6cD2rDA.png)
+
+* Go to editor and create .github/workflows folder at the root of the project
+
+![](https://cdn-images-1.medium.com/max/2000/1*pCzvvu0WGJiQgx2WoGN05A.png)
+
+* Add dev.yml file with the following content:
+
+<iframe src="https://medium.com/media/50ab7a92e5e93cef169a44ed83a90cbe" frameborder=0></iframe>
+
+The above Github Action workflow will do the following things when someone push changes to dev branch:
+
+* It will set up Github Runner with NodeJS 16 version
+
+* It will deploy the AWS Lambda with migration scripts
+
+* It will trigger AWS Lambda
+
+To start the deployment, push changes to dev branch:
+
+    git push origin -f main:dev
+
+![](https://cdn-images-1.medium.com/max/3172/1*MO3btPxdb20GuNQBPmJfpg.png)
 
 ## Limitations
 
